@@ -1,0 +1,124 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi350-vllm-dev
+  namespace: default
+spec:
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mi350-vllm-dev
+  template:
+    metadata:
+      labels:
+        app: mi350-vllm-dev
+    spec:
+      hostIPC: true
+
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi350x
+
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      
+      containers:
+      - name: vllm-inference-container 
+        image: docker.io/rocm/vllm-dev:dsfp4_1120
+        imagePullPolicy: Always
+        #command: ["sh", "-c", "sleep infinity"] # Test only
+        command: 
+        - bash
+        - -c
+        - |
+          set -ex  
+
+          max_num_seqs=32
+          max_num_batched_tokens=163840
+          max_seq_len_to_capture=1024
+          tensor_parallel_size=8
+          max_model_len=70000
+          MODEL=amd/DeepSeek-R1-MXFP4
+          unset FLATMM_HIP_CLANG_PATH
+
+          VLLM_USE_V1=1 \
+          VLLM_DISABLE_COMPILE_CACHE=1 \
+          AMDGCN_USE_BUFFER_OPS=1 \
+          VLLM_TORCH_PROFILER_RECORD_SHAPES=1 \
+          VLLM_ROCM_USE_AITER=1 \
+          VLLM_TRITON_FP4_GEMM_USE_ASM=0 \
+          VLLM_ROCM_USE_AITER_FP4_ASM_GEMM=0 \
+          VLLM_ROCM_USE_AITER_MHA=1 \
+          VLLM_ROCM_USE_AITER_MLA=0 \
+          VLLM_ROCM_USE_CK_MXFP4_MOE=1 \
+          VLLM_TORCH_PROFILER_DIR=. \
+          VLLM_TORCH_PROFILER_WITH_STACK=0 \
+          VLLM_ROCM_USE_AITER_TRITON_MLA=0 \
+          VLLM_ROCM_USE_AITER_TRITON_FUSED_SHARED_EXPERTS=1 \
+          VLLM_ROCM_USE_AITER_TRITON_FUSED_RMSNORM_FP4_QUANT=1 \
+          VLLM_ROCM_USE_AITER_TRITON_FUSED_ROPE_ZEROS_KV_CACHE=1 \
+          VLLM_ROCM_USE_AITER_TRITON_MXFP4_BMM=1 \
+          VLLM_ROCM_USE_AITER_TRITON_FUSED_MUL_ADD=1 \
+          VLLM_ROCM_USE_AITER_TRITON_FP8_BMM=0 \
+          vllm serve  ${MODEL} \
+            --host localhost \
+            --port 8000 \
+            --swap-space 64 \
+            --disable-log-requests \
+            --dtype auto \
+            --tensor-parallel-size ${tensor_parallel_size} \
+            --max-num-seqs ${max_num_seqs} \
+            --distributed-executor-backend mp \
+            --trust-remote-code \
+            --block-size 1 \
+            --compilation-config='{"pass_config":{"enable_attn_fusion":true,"enable_noop":true,"enable_fusion":true},"cudagraph_mode":"FULL","custom_ops":["+rms_norm","+silu_and_mul","+quant_fp8"],"splitting_ops":[]}' \
+            --gpu-memory-utilization 0.95 \
+            --max-model-len ${max_model_len} \
+            --kv-cache-dtype fp8 \
+            --max-seq-len-to-capture ${max_seq_len_to_capture} \
+            --max-num-batched-tokens ${max_num_batched_tokens} \
+            --async-scheduling
+
+        resources:
+          limits:
+            amd.com/gpu: 8
+        volumeMounts:
+        - name: temp-hf-cache
+          mountPath: /root/.cache/huggingface
+        - name: shm
+          mountPath: /dev/shm
+        - name: dev-kfd
+          mountPath: /dev/kfd
+        - name: dev-dri
+          mountPath: /dev/dri
+        securityContext:  # Container level
+          capabilities:
+            add:
+            - SYS_PTRACE
+          seccompProfile:
+            type: Unconfined
+      
+      securityContext:
+        supplementalGroups:  # Pod level
+        - 44
+      
+      volumes:
+      - name: temp-hf-cache
+        hostPath:
+          path: /root/.cache/huggingface
+          type: DirectoryOrCreate
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 128Gi
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri
