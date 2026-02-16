@@ -10,4 +10,4 @@ Tested 2 images, and some paramaters in [the Image 1 - dev](https://hub.docker.c
 
 There are a lot of flags to run the vLLM server, and it will take some time to digest them all.
 
-Initial benchmarks indicate that performance is within the expected range, and the dev version appears to offer significant performance improvements (over 100%) along while also supporting additional parameters.
+Initial benchmarks indicate that performance is within the expected range, and the dev version appears to offer significant performance improvements (over 100%) while also supporting additional parameters.
