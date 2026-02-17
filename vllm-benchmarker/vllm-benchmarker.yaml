@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-benchmarker
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-benchmarker
+  template:
+    metadata:
+      labels:
+        app: vllm-benchmarker
+    spec:
+      containers:
+      - name: benchmarking-container 
+        image: docker.io/richardxgf/amd:vllm_benchmarker_1.0
+        imagePullPolicy: Always
+        #command: ["sh", "-c", "sleep infinity"] # Test only
+        command: ["python3", "benchmarker.py"]
+        envFrom:
+        - configMapRef:
+            name: bench-env
+        volumeMounts:
+        - name: test-cases-volume
+          mountPath: /app/test_cases.csv
+          subPath: test_cases.csv
+          readOnly: true
+      volumes:
+      - name: test-cases-volume
+        configMap:
+          name: test-cases-config
+---

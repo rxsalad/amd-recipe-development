@@ -1,0 +1,18 @@
+MDB_USERNAME=doadmin
+MDB_PASSWORD=*************
+MDB_HOST=*************
+MDB_DATABASE=admin
+MDB_BENCHMARK_DB=benchmark_db_2026
+
+TASK_ID=deepseek_r1_mxfp4_vllm_20260216
+
+OTHERS=doks-1.34.1-rocm-7.0.2-mi350x8-vllm-dev-dsfp4_1120
+# OTHERS=doks-1.34.1-rocm-7.0.2-mi350x8-vllm-latest-0.15.1
+
+# The BASE_URL and MODEL will override those defined in the test cases.
+
+BASE_URL=http://mi350-vllm-dev.default.svc.cluster.local:80
+#BASE_URL=http://mi350-vllm-latest.default.svc.cluster.local:80
+
+MODEL=amd/DeepSeek-R1-MXFP4
+
