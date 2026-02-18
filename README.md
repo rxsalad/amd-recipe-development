@@ -29,7 +29,7 @@ mi325-vllm-0151.default.svc.cluster.local
 
 Manually verify and troubleshoot within the vLLM Pods if necessary:
 
-```
+``` shell
 curl http://localhost:8000/v1/chat/completions   -H "Content-Type: application/json"   -d '{
     "model": "amd/DeepSeek-R1-MXFP4",
     "messages": [{"role": "user", "content": "who are you?"}]
@@ -155,9 +155,9 @@ kubectl delete -f vllm-benchmarker.yaml
 
 ### Step 5: Download and analyze the benchmark data
 
-Runt [the code](vllm-benchmarker/benchmark-db-download.py) to download the benchmark data, which will be saved to the file task_id.csv, such as [deepseek_r1_mxfp4_vllm_20260216.csv](DeepSeek-R1-MXFP4/deepseek_r1_mxfp4_vllm_20260216.csv) and [Qwen3-235B-A22B-Instruct-2507-FP8_vllm_20260217.csv](Qwen3-235B-A22B-Instruct-2507-FP8/Qwen3-235B-A22B-Instruct-2507-FP8_vllm_20260217.csv).
+Run [the code](vllm-benchmarker/benchmark-db-download.py) to download the benchmark data using TASK_ID, which will be saved to the file TASK_ID.csv, such as [deepseek_r1_mxfp4_vllm_20260216.csv](DeepSeek-R1-MXFP4/deepseek_r1_mxfp4_vllm_20260216.csv) and [Qwen3-235B-A22B-Instruct-2507-FP8_vllm_20260217.csv](Qwen3-235B-A22B-Instruct-2507-FP8/Qwen3-235B-A22B-Instruct-2507-FP8_vllm_20260217.csv).
 
-Run the JupyterLab to analyze the data:
+The start the JupyterLab to analyze the data:
 
 ``` shell
 jupyter lab --no-browser --port=8888  --ip=* --allow-root 
