@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-vllm0
+  labels:
+    app: llama-vllm0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llama-vllm0
+  template:
+    metadata:
+      labels:
+        app: llama-vllm0
+    spec:
+      hostIPC: true
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi325x
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      containers:
+        - name: vllm-rocm
+          image: docker.io/rocm/vllm:rocm7.0.0_vllm_0.11.1_20251103
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          command: ["bash"]
+          args:
+          - "-c"
+          - "cd / && vllm serve meta-llama/Llama-3.2-1B-Instruct --gpu-memory-utilization 0.6"
+          env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token-secret
+                  key: HF_TOKEN
+          resources:
+            limits:
+              amd.com/gpu: 1
+
+          volumeMounts:
+          - name: dev-kfd
+            mountPath: /dev/kfd
+          - name: dev-dri
+            mountPath: /dev/dri
+          securityContext:
+            capabilities:
+              add:
+              - SYS_PTRACE
+            seccompProfile:
+              type: Unconfined
+      securityContext:
+        supplementalGroups:
+        - 44  
+      volumes:
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri
+---
