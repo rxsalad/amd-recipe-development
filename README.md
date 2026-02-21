@@ -1,6 +1,10 @@
 # vLLM Benchmarker
 
+To deploy model deployment recipes, we need an automatic benchmarker to evaluate performance, enabling a timely and interactive workflow.
+
 The vLLM Benchmarker runs as a CPU-only pod and can benchmark multiple vLLM services within the same DOKS cluster or via public endpoints.
+
+<img src="vllm-benchmarker/bench-arch.png" alt="architecture" width="800" height="450"/>
 
 [The test cases](vllm-benchmarker/test_cases.csv) must first be uploaded to the DOKS cluster and then mounted to the pod ([a queue-based solution](https://github.com/rxsalad/redis-queue-ai-inference) may be considered in the future, allowing dynamic injection of test cases). The model can be warmed up if a test case with num_requests = 1 is included.
 
