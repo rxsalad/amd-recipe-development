@@ -30,51 +30,51 @@ QPS (Queries Per Second) Statistics:
 
 Time To First Token (TTFT):
   Count: 3421
-  Mean:  866.65 ms
-  p50:   594.36 ms
-  p75:   1303.68 ms
-  p80:   1479.01 ms
-  p90:   1984.35 ms
-  p95:   2519.18 ms
-  p99:   3345.07 ms
-  Max:   5287.56 ms
+  Mean:  750.13 ms
+  p50:   499.86 ms
+  p75:   1084.98 ms
+  p80:   1285.22 ms
+  p90:   1808.69 ms
+  p95:   2240.47 ms
+  p99:   2970.20 ms
+  Max:   4183.13 ms
 
 First Chunk Latency (16 tokens):
   Count: 3421
-  Mean:  3385.25 ms
-  p50:   2388.02 ms
-  p75:   5094.69 ms
-  p80:   5903.60 ms
-  p90:   7529.95 ms
-  p95:   8869.21 ms
-  p99:   11630.05 ms
-  Max:   17882.09 ms
+  Mean:  2588.06 ms
+  p50:   2018.99 ms
+  p75:   3755.87 ms
+  p80:   4204.64 ms
+  p90:   5295.30 ms
+  p95:   6420.59 ms
+  p99:   8355.75 ms
+  Max:   10158.32 ms
 
 Time Per Output Token (TPOT):
   Count: 3421
-  Mean:  92.43 ms
-  p50:   70.36 ms
-  p75:   140.51 ms
-  p80:   152.03 ms
-  p90:   174.96 ms
-  p95:   211.09 ms
-  p99:   237.94 ms
-  Max:   325.85 ms
+  Mean:  86.63 ms
+  p50:   65.22 ms
+  p75:   134.18 ms
+  p80:   145.86 ms
+  p90:   165.99 ms
+  p95:   195.55 ms
+  p99:   224.35 ms
+  Max:   254.68 ms
 
 Total Request Time:
   Count: 3421
-  Mean:  12431.77 ms
-  p50:   9409.32 ms
-  p75:   19348.13 ms
-  p80:   20390.32 ms
-  p90:   23652.12 ms
-  p95:   28482.52 ms
-  p99:   31401.06 ms
-  Max:   32968.43 ms
+  Mean:  11589.27 ms
+  p50:   8866.97 ms
+  p75:   18569.95 ms
+  p80:   19435.34 ms
+  p90:   22227.63 ms
+  p95:   25984.85 ms
+  p99:   28696.67 ms
+  Max:   30849.72 ms
 
 Token Statistics:
   Average prompt tokens: 4945.77
-  Average completion tokens: 125.30
+  Average completion tokens: 125.29
 
 ================================================================================
 RUNNING PERIOD (after warm-up)
@@ -95,47 +95,47 @@ QPS (Queries Per Second) Statistics:
 
 Time To First Token (TTFT):
   Count: 11232
-  Mean:  384.04 ms
-  p50:   230.63 ms
-  p75:   493.82 ms
-  p80:   577.98 ms
-  p90:   850.71 ms
-  p95:   1189.04 ms
-  p99:   1986.66 ms
-  Max:   3313.59 ms
+  Mean:  382.12 ms
+  p50:   235.42 ms
+  p75:   496.41 ms
+  p80:   576.51 ms
+  p90:   844.71 ms
+  p95:   1164.46 ms
+  p99:   1916.62 ms
+  Max:   3301.67 ms
 
 First Chunk Latency (16 tokens):
   Count: 11232
-  Mean:  1471.35 ms
-  p50:   1094.64 ms
-  p75:   1782.60 ms
-  p80:   2016.93 ms
-  p90:   2922.85 ms
-  p95:   3874.72 ms
-  p99:   6062.34 ms
-  Max:   8255.91 ms
+  Mean:  1478.86 ms
+  p50:   1103.32 ms
+  p75:   1786.53 ms
+  p80:   2035.94 ms
+  p90:   2935.55 ms
+  p95:   3901.86 ms
+  p99:   6088.23 ms
+  Max:   8222.78 ms
 
 Time Per Output Token (TPOT):
   Count: 11232
-  Mean:  51.11 ms
-  p50:   47.03 ms
-  p75:   61.23 ms
-  p80:   65.79 ms
-  p90:   78.75 ms
-  p95:   89.72 ms
-  p99:   112.35 ms
-  Max:   131.52 ms
+  Mean:  51.39 ms
+  p50:   47.27 ms
+  p75:   61.46 ms
+  p80:   66.41 ms
+  p90:   78.96 ms
+  p95:   90.32 ms
+  p99:   112.30 ms
+  Max:   159.32 ms
 
 Total Request Time:
   Count: 11232
-  Mean:  6783.65 ms
-  p50:   6248.51 ms
-  p75:   8155.98 ms
-  p80:   8786.85 ms
-  p90:   10365.23 ms
-  p95:   12172.34 ms
-  p99:   14820.00 ms
-  Max:   16098.67 ms
+  Mean:  6814.30 ms
+  p50:   6279.87 ms
+  p75:   8187.86 ms
+  p80:   8823.02 ms
+  p90:   10380.44 ms
+  p95:   12293.32 ms
+  p99:   14835.38 ms
+  Max:   16110.77 ms
 
 Token Statistics:
   Average prompt tokens: 4858.34

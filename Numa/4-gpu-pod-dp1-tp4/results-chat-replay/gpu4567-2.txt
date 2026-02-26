@@ -5,7 +5,7 @@ python3 prompt_replay.py \
  --host http://165.245.133.193:30087 2>&1 | tee vllm-qwen-gpu4567.log
 
 
- All requests completed
+All requests completed
 
 ================================================================================
 LATENCY SUMMARY
