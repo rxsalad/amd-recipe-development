@@ -1,0 +1,143 @@
+python3 prompt_replay.py \
+ --prompt-dump-file MASKED_clean_qwen3-235b-fp8-deep-synth-lite-yi-exp_2025-12-06_14h.csv \
+ --tokenizer-type qwen --keep-percent-per-pod 0 1.0 0 --duration 1800 --warmup 600 \
+ --model Qwen/Qwen3-235B-A22B-Instruct-2507-FP8 \
+ --host http://165.245.133.193:30087 2>&1 | tee vllm-qwen-gpu4567.log
+
+
+All requests completed
+
+================================================================================
+LATENCY SUMMARY
+================================================================================
+
+================================================================================
+WARM-UP PERIOD (600 seconds)
+================================================================================
+
+Request Statistics:
+  Total requests: 3411
+  Successful: 3411
+  Failed: 0
+
+QPS (Queries Per Second) Statistics:
+  Average QPS: 5.69
+  Min QPS: 0.00
+  Max QPS: 56.85
+  Total requests: 3411
+  Test duration: 600s
+  Number of 60s windows: 10
+
+Time To First Token (TTFT):
+  Count: 3411
+  Mean:  1830.50 ms
+  p50:   1422.87 ms
+  p75:   2525.01 ms
+  p80:   2918.94 ms
+  p90:   3838.54 ms
+  p95:   4681.63 ms
+  p99:   7560.92 ms
+  Max:   11849.59 ms
+
+First Chunk Latency (16 tokens):
+  Count: 3411
+  Mean:  7595.28 ms
+  p50:   5989.30 ms
+  p75:   10190.81 ms
+  p80:   11694.58 ms
+  p90:   16836.31 ms
+  p95:   20518.15 ms
+  p99:   28360.62 ms
+  Max:   33882.01 ms
+
+Time Per Output Token (TPOT):
+  Count: 3411
+  Mean:  121.43 ms
+  p50:   112.49 ms
+  p75:   158.85 ms
+  p80:   170.84 ms
+  p90:   200.38 ms
+  p95:   243.93 ms
+  p99:   276.46 ms
+  Max:   312.93 ms
+
+Total Request Time:
+  Count: 3411
+  Mean:  17051.55 ms
+  p50:   15640.07 ms
+  p75:   22938.46 ms
+  p80:   24160.69 ms
+  p90:   28351.17 ms
+  p95:   35771.61 ms
+  p99:   40272.15 ms
+  Max:   44880.68 ms
+
+Token Statistics:
+  Average prompt tokens: 4946.67
+  Average completion tokens: 125.44
+
+================================================================================
+RUNNING PERIOD (after warm-up)
+================================================================================
+
+Request Statistics:
+  Total requests: 11242
+  Successful: 11242
+  Failed: 0
+
+QPS (Queries Per Second) Statistics:
+  Average QPS: 6.25
+  Min QPS: 0.00
+  Max QPS: 187.37
+  Total requests: 11242
+  Test duration: 1800s
+  Number of 60s windows: 30
+
+Time To First Token (TTFT):
+  Count: 11242
+  Mean:  568.40 ms
+  p50:   358.54 ms
+  p75:   728.85 ms
+  p80:   870.56 ms
+  p90:   1390.53 ms
+  p95:   1873.12 ms
+  p99:   2996.30 ms
+  Max:   4067.05 ms
+
+First Chunk Latency (16 tokens):
+  Count: 11242
+  Mean:  2105.23 ms
+  p50:   1492.82 ms
+  p75:   2593.11 ms
+  p80:   3063.98 ms
+  p90:   4362.24 ms
+  p95:   5716.19 ms
+  p99:   8721.97 ms
+  Max:   11491.16 ms
+
+Time Per Output Token (TPOT):
+  Count: 11242
+  Mean:  66.89 ms
+  p50:   61.96 ms
+  p75:   80.16 ms
+  p80:   86.63 ms
+  p90:   101.35 ms
+  p95:   112.05 ms
+  p99:   130.56 ms
+  Max:   153.58 ms
+
+Total Request Time:
+  Count: 11242
+  Mean:  8942.74 ms
+  p50:   8340.54 ms
+  p75:   10768.92 ms
+  p80:   11589.97 ms
+  p90:   13759.16 ms
+  p95:   15341.87 ms
+  p99:   17258.82 ms
+  Max:   18962.10 ms
+
+Token Statistics:
+  Average prompt tokens: 4858.14
+  Average completion tokens: 125.32
+================================================================================

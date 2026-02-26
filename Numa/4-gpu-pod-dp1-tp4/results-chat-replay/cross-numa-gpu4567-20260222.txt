@@ -1,0 +1,684 @@
+================================================================================
+RUNNING PERIOD (after warm-up)
+================================================================================
+
+Request Statistics:
+  Total requests: 11230
+  Successful: 11230
+  Failed: 0
+
+QPS (Queries Per Second) Statistics:
+  Average QPS: 6.24
+  Min QPS: 0.00
+  Max QPS: 187.17
+  Total requests: 11230
+  Test duration: 1800s
+  Number of 60s windows: 30
+
+Time To First Token (TTFT):
+  Count: 11230
+  Mean:  566.23 ms
+  p50:   355.65 ms
+  p75:   719.59 ms
+  p80:   861.33 ms
+  p90:   1399.68 ms
+  p95:   1881.48 ms
+  p99:   3003.96 ms
+  Max:   4195.63 ms
+
+First Chunk Latency (16 tokens):
+  Count: 11230
+  Mean:  2091.21 ms
+  p50:   1486.62 ms
+  p75:   2580.35 ms
+  p80:   3024.28 ms
+  p90:   4286.71 ms
+  p95:   5667.59 ms
+  p99:   8628.54 ms
+  Max:   11489.49 ms
+
+Time Per Output Token (TPOT):
+  Count: 11230
+  Mean:  66.92 ms
+  p50:   62.26 ms
+  p75:   79.99 ms
+  p80:   86.74 ms
+  p90:   101.08 ms
+  p95:   111.78 ms
+  p99:   131.22 ms
+  Max:   155.23 ms
+
+Total Request Time:
+  Count: 11230
+  Mean:  8942.94 ms
+  p50:   8350.80 ms
+  p75:   10782.54 ms
+  p80:   11560.01 ms
+  p90:   13683.69 ms
+  p95:   15351.61 ms
+  p99:   17259.90 ms
+  Max:   18962.68 ms
+
+Token Statistics:
+  Average prompt tokens: 4858.31
+  Average completion tokens: 125.32
+================================================================================
+
+##################################################
+
+root@mi325-vllm4567-65c88b4c8f-4qftn:/app# ./print.sh 
+# ps -ef
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 Feb21 ?        00:03:14 /usr/bin/python /usr/local/b
+root         306       1  0 Feb21 ?        00:00:00 /usr/bin/python -c from mult
+root         307       1  5 Feb21 ?        01:25:18 VLLM::EngineCore
+root         522     307 99 Feb21 ?        1-03:39:07 VLLM::Worker_TP0_EP0
+root         523     307 99 Feb21 ?        1-02:35:47 VLLM::Worker_TP1_EP1
+root         524     307 99 Feb21 ?        1-02:35:43 VLLM::Worker_TP2_EP2
+root         525     307 99 Feb21 ?        1-02:35:48 VLLM::Worker_TP3_EP3
+root        4991       0  0 00:45 pts/0    00:00:00 /bin/bash
+root        5618       0  0 17:18 pts/1    00:00:00 /bin/bash
+root        5633       0  0 17:20 pts/2    00:00:00 /bin/bash
+root        5658    5633  0 18:09 pts/2    00:00:00 /bin/bash ./print.sh
+root        5659    5658  0 18:09 pts/2    00:00:00 ps -ef
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 154 vllm
+    306 120 python
+    307  70 VLLM::EngineCor
+    522 158 VLLM::Worker_TP
+    523 152 VLLM::Worker_TP
+    524 159 VLLM::Worker_TP
+    525  75 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  46 vllm
+    306 120 python
+    307  34 VLLM::EngineCor
+    522 158 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524 159 VLLM::Worker_TP
+    525  75 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 125 vllm
+    306 120 python
+    307  77 VLLM::EngineCor
+    522 158 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524  81 VLLM::Worker_TP
+    525  75 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 124 vllm
+    306 120 python
+    307  77 VLLM::EngineCor
+    522 127 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524  81 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  44 vllm
+    306 120 python
+    307  77 VLLM::EngineCor
+    522 127 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524  81 VLLM::Worker_TP
+    525  69 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  44 vllm
+    306 120 python
+    307  30 VLLM::EngineCor
+    522 127 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524 123 VLLM::Worker_TP
+    525  69 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 124 vllm
+    306 120 python
+    307  30 VLLM::EngineCor
+    522  90 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524 123 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 103 vllm
+    306 120 python
+    307  30 VLLM::EngineCor
+    522 102 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524 123 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 103 vllm
+    306 120 python
+    307   6 VLLM::EngineCor
+    522 102 VLLM::Worker_TP
+    523  98 VLLM::Worker_TP
+    524 123 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  45 vllm
+    306 120 python
+    307   6 VLLM::EngineCor
+    522 102 VLLM::Worker_TP
+    523  96 VLLM::Worker_TP
+    524 123 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 104 vllm
+    306 120 python
+    307   6 VLLM::EngineCor
+    522  85 VLLM::Worker_TP
+    523 107 VLLM::Worker_TP
+    524 123 VLLM::Worker_TP
+    525  40 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 110 vllm
+    306 120 python
+    307  47 VLLM::EngineCor
+    522  85 VLLM::Worker_TP
+    523 147 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525  40 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 118 vllm
+    306 120 python
+    307  47 VLLM::EngineCor
+    522  85 VLLM::Worker_TP
+    523  82 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525  83 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 119 vllm
+    306 120 python
+    307   4 VLLM::EngineCor
+    522  85 VLLM::Worker_TP
+    523 126 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525 104 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 119 vllm
+    306 120 python
+    307   4 VLLM::EngineCor
+    522  86 VLLM::Worker_TP
+    523  18 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525 104 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  67 vllm
+    306 120 python
+    307  65 VLLM::EngineCor
+    522  86 VLLM::Worker_TP
+    523  46 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525 104 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 119 vllm
+    306 120 python
+    307  93 VLLM::EngineCor
+    522  21 VLLM::Worker_TP
+    523  46 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525  91 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  69 vllm
+    306 120 python
+    307  93 VLLM::EngineCor
+    522  56 VLLM::Worker_TP
+    523 114 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525  89 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 109 vllm
+    306 120 python
+    307  93 VLLM::EngineCor
+    522  56 VLLM::Worker_TP
+    523 114 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525  89 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  50 vllm
+    306 120 python
+    307  93 VLLM::EngineCor
+    522  56 VLLM::Worker_TP
+    523 114 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525  89 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  52 vllm
+    306 120 python
+    307 132 VLLM::EngineCor
+    522  56 VLLM::Worker_TP
+    523 114 VLLM::Worker_TP
+    524 117 VLLM::Worker_TP
+    525  89 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  81 vllm
+    306 120 python
+    307 132 VLLM::EngineCor
+    522  56 VLLM::Worker_TP
+    523 114 VLLM::Worker_TP
+    524  85 VLLM::Worker_TP
+    525  67 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  51 vllm
+    306 120 python
+    307 132 VLLM::EngineCor
+    522  56 VLLM::Worker_TP
+    523 101 VLLM::Worker_TP
+    524 135 VLLM::Worker_TP
+    525  67 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  78 vllm
+    306 120 python
+    307 132 VLLM::EngineCor
+    522  56 VLLM::Worker_TP
+    523 139 VLLM::Worker_TP
+    524 135 VLLM::Worker_TP
+    525  67 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  81 vllm
+    306 120 python
+    307 132 VLLM::EngineCor
+    522  55 VLLM::Worker_TP
+    523 139 VLLM::Worker_TP
+    524 135 VLLM::Worker_TP
+    525  67 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  78 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522   8 VLLM::Worker_TP
+    523 139 VLLM::Worker_TP
+    524  97 VLLM::Worker_TP
+    525  67 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  81 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522  52 VLLM::Worker_TP
+    523 139 VLLM::Worker_TP
+    524  70 VLLM::Worker_TP
+    525  67 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  93 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522 135 VLLM::Worker_TP
+    523 139 VLLM::Worker_TP
+    524  70 VLLM::Worker_TP
+    525  67 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  93 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522  88 VLLM::Worker_TP
+    523 139 VLLM::Worker_TP
+    524  70 VLLM::Worker_TP
+    525  20 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  93 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522  88 VLLM::Worker_TP
+    523  84 VLLM::Worker_TP
+    524  70 VLLM::Worker_TP
+    525  20 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1   0 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522  88 VLLM::Worker_TP
+    523  84 VLLM::Worker_TP
+    524  70 VLLM::Worker_TP
+    525  20 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  70 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522  88 VLLM::Worker_TP
+    523 135 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  70 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522  88 VLLM::Worker_TP
+    523 135 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  71 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522  88 VLLM::Worker_TP
+    523 135 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  80 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523 102 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  87 vllm
+    306 120 python
+    307 156 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523 102 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  35 vllm
+    306 120 python
+    307 107 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523 124 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  87 vllm
+    306 120 python
+    307  79 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523  83 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  35 vllm
+    306 120 python
+    307  79 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523 101 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 139 vllm
+    306 120 python
+    307  35 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523 101 VLLM::Worker_TP
+    524  49 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1   2 vllm
+    306 120 python
+    307  35 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523 101 VLLM::Worker_TP
+    524  17 VLLM::Worker_TP
+    525  74 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  86 vllm
+    306 120 python
+    307  35 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523  24 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 114 vllm
+    306 120 python
+    307  35 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523  87 VLLM::Worker_TP
+    524  18 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  52 vllm
+    306 120 python
+    307  35 VLLM::EngineCor
+    522 151 VLLM::Worker_TP
+    523  87 VLLM::Worker_TP
+    524  18 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  52 vllm
+    306 120 python
+    307  70 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523 102 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  52 vllm
+    306 120 python
+    307  84 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523 103 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 147 vllm
+    306 120 python
+    307  84 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523   7 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525  22 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 106 vllm
+    306 120 python
+    307  84 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  24 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525  22 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  14 vllm
+    306 120 python
+    307  84 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  32 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525  22 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 120 vllm
+    306 120 python
+    307  80 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  32 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525  65 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 120 vllm
+    306 120 python
+    307 128 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  32 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525  73 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  64 vllm
+    306 120 python
+    307 114 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  32 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525  69 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  65 vllm
+    306 120 python
+    307 104 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523   1 VLLM::Worker_TP
+    524  63 VLLM::Worker_TP
+    525  69 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1 105 vllm
+    306 120 python
+    307  94 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523   1 VLLM::Worker_TP
+    524   4 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  65 vllm
+    306 120 python
+    307 158 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523   1 VLLM::Worker_TP
+    524   4 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  41 vllm
+    306 120 python
+    307 158 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  29 VLLM::Worker_TP
+    524  73 VLLM::Worker_TP
+    525   5 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  47 vllm
+    306 120 python
+    307 158 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  29 VLLM::Worker_TP
+    524  73 VLLM::Worker_TP
+    525  53 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1  78 vllm
+    306 120 python
+    307 158 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  29 VLLM::Worker_TP
+    524  51 VLLM::Worker_TP
+    525  53 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1   1 vllm
+    306 120 python
+    307 158 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  78 VLLM::Worker_TP
+    524  51 VLLM::Worker_TP
+    525  53 VLLM::Worker_TP
+
+# ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    PID PSR COMMAND
+      1   0 vllm
+    306 120 python
+    307 158 VLLM::EngineCor
+    522 152 VLLM::Worker_TP
+    523  78 VLLM::Worker_TP
+    524  51 VLLM::Worker_TP
+    525  53 VLLM::Worker_TP
+root@mi325-vllm4567-65c88b4c8f-4qftn:/app# 

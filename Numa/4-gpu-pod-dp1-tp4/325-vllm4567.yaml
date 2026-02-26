@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi325-vllm4567
+  namespace: default
+spec:
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mi325-vllm4567
+  template:
+    metadata:
+      labels:
+        app: mi325-vllm4567
+    spec:
+      hostIPC: true
+
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi325x
+
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      
+      containers:
+      - name: vllm-inference-container # Should run continuously 
+        image: docker.io/vllm/vllm-openai-rocm:v0.15.1 # latest
+        imagePullPolicy: Always
+        #command: ["sh", "-c", "sleep infinity"] # Test only
+        command:
+        - bash
+        - -c
+        - |
+          set -ex
+
+          VLLM_ROCM_QUICK_REDUCE_QUANTIZATION=INT6 \
+          SAFETENSORS_FAST_GPU=1 \
+          VLLM_ROCM_USE_AITER=1 \
+          VLLM_ROCM_USE_AITER_MOE=1 \
+          VLLM_USE_TRITON_FLASH_ATTN=0 \
+          vllm serve Qwen/Qwen3-235B-A22B-Instruct-2507-FP8 \
+            --host 0.0.0.0 \
+            --port 8000 \
+            --tensor-parallel-size 4 \
+            --enable-expert-parallel \
+            --kv-cache-dtype fp8 \
+            --distributed-executor-backend mp \
+            --trust-remote-code \
+            --disable-log-requests \
+            --max-model-len 32768 \
+            --quantization fp8 \
+            --max_num_batched_tokens 32768 \
+            --block_size=32
+
+        resources:
+          limits:
+            amd.com/gpu: 4
+        volumeMounts:
+        - name: temp-hf-cache
+          mountPath: /root/.cache/huggingface
+        - name: shm
+          mountPath: /dev/shm
+        - name: dev-kfd
+          mountPath: /dev/kfd
+        - name: dev-dri
+          mountPath: /dev/dri
+        securityContext:  # Container level
+          capabilities:
+            add:
+            - SYS_PTRACE
+          seccompProfile:
+            type: Unconfined
+      
+      securityContext:
+        supplementalGroups:  # Pod level
+        - 44
+      
+      volumes:
+      - name: temp-hf-cache
+        hostPath:
+          path: /root/.cache/huggingface
+          type: DirectoryOrCreate
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 128Gi
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri
