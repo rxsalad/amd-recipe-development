@@ -1,0 +1,41 @@
+
+
+curl http://165.245.133.193:30080/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'
+ 
+curl http://165.245.133.193:30081/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'
+
+curl http://165.245.133.193:30082/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'
+ 
+curl http://165.245.133.193:30083/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'
+
+curl http://165.245.133.193:30084/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'
+ 
+curl http://165.245.133.193:30085/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'
+
+curl http://165.245.133.193:30086/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'
+ 
+curl http://165.245.133.193:30087/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "meta-llama/Llama-3.1-70B-Instruct",
+	"messages": [{"role": "user", "content": "How to learn AI/ML? 200 words?"}]
+  }'

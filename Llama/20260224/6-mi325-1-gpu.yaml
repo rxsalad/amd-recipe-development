@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-vllm6
+  namespace: default
+spec:
+  selector:
+    app: llama-vllm6
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      nodePort: 30086
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-vllm6
+  labels:
+    app: llama-vllm6
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llama-vllm6
+  template:
+    metadata:
+      labels:
+        app: llama-vllm6
+    spec:
+      hostIPC: true
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi325x
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      containers:
+        - name: vllm-rocm
+          image: docker.io/rocm/vllm:rocm7.0.0_vllm_0.11.1_20251103
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          command: ["bash"]
+          args:
+          - "-c"
+          - "cd / && vllm serve meta-llama/Llama-3.1-70B-Instruct --gpu-memory-utilization 0.9"
+          env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token-secret
+                  key: HF_TOKEN
+          resources:
+            limits:
+              amd.com/gpu: 1
+
+          volumeMounts:
+          - name: temp-hf-cache
+            mountPath: /root/.cache/huggingface
+          - name: dev-kfd
+            mountPath: /dev/kfd
+          - name: dev-dri
+            mountPath: /dev/dri
+          securityContext:
+            capabilities:
+              add:
+              - SYS_PTRACE
+            seccompProfile:
+              type: Unconfined
+      securityContext:
+        supplementalGroups:
+        - 44  
+      volumes:
+      - name: temp-hf-cache
+        hostPath:
+          path: /root/.cache/huggingface
+          type: DirectoryOrCreate
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri
+---
