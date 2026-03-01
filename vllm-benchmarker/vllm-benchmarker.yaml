@@ -19,6 +19,12 @@ spec:
         imagePullPolicy: Always
         #command: ["sh", "-c", "sleep infinity"] # Test only
         command: ["python3", "benchmarker.py"]
+        env:
+          - name: HF_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: hf-token-secret
+                key: HF_TOKEN
         envFrom:
         - configMapRef:
             name: bench-env

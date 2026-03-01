@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "# ps -ef"
+ps -ef
+
+sleep 600
+
+for i in {1..60}; do
+    echo
+    echo "# ps -o pid,psr,comm -p 1,306,307,522,523,524,525"
+    ps -o pid,psr,comm -p 1,306,307,522,523,524,525
+    sleep 10
+done

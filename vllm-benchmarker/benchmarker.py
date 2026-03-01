@@ -61,7 +61,7 @@ for test_case in test_cases:
     
     if test_case['num-prompts'] == 1: # Warm-up run for single prompt test cases
         print("\n" + "-" * 40 + "> Warm-up without recording the results:", flush=True)
-        run_benchmark(test_case['base-url'], test_case['model'], test_case['random-input-len'], test_case['random-output-len'], test_case['request-rate'], 100, temp_file)
+        run_benchmark(test_case['base-url'], test_case['model'], test_case['random-input-len'], test_case['random-output-len'], test_case['request-rate'], 10, temp_file)
 
     temp = run_benchmark(test_case['base-url'], test_case['model'], test_case['random-input-len'], test_case['random-output-len'], test_case['request-rate'], test_case['num-prompts'], temp_file)
 
