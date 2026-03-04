@@ -1,0 +1,107 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi350-vllm
+  namespace: default
+spec:
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mi350-vllm
+  template:
+    metadata:
+      labels:
+        app: mi350-vllm
+    spec:
+      hostIPC: true
+
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi350x
+
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      
+      containers:
+      - name: vllm-inference-container # Should run continuously 
+        image: rocm/vllm-dev:preview_releases_rocm_v0.16.0_20260217
+        imagePullPolicy: Always
+        #command: ["sh", "-c", "sleep infinity"] # Test only
+        command: 
+        - bash
+        - -c
+        - |
+          set -ex  
+
+          max_num_seqs=32
+          max_num_batched_tokens=163840
+          max_seq_len_to_capture=4096
+          tensor_parallel_size=8
+          max_model_len=70000
+
+          MODEL=amd/DeepSeek-R1-0528-MXFP4
+
+          # Launch vLLM serve
+          VLLM_ROCM_USE_AITER=1 \
+          vllm serve ${MODEL} \
+              --host 0.0.0.0 \
+              --port 8000 \
+              --swap-space 64 \
+              --disable-log-requests \
+              --dtype auto \
+              --no_enable_prefix_caching \
+              --tensor-parallel-size ${tensor_parallel_size} \
+              --max-num-seqs ${max_num_seqs} \
+              --compilation-config='{"compile_sizes":[1,2,4,8,16],"cudagraph_mode":"FULL","custom_ops":["+rms_norm","+silu_and_mul","+quant_fp8"],"splitting_ops":[]}' \
+              --distributed-executor-backend mp \
+              --trust-remote-code \
+              --block-size 1 \
+              --gpu-memory-utilization 0.95 \
+              --max-model-len ${max_model_len} \
+              --kv-cache-dtype fp8 \
+              --max-num-batched-tokens ${max_num_batched_tokens} \
+              --async-scheduling
+
+        resources:
+          limits:
+            amd.com/gpu: 8
+        volumeMounts:
+        - name: temp-hf-cache
+          mountPath: /root/.cache/huggingface
+        - name: shm
+          mountPath: /dev/shm
+        - name: dev-kfd
+          mountPath: /dev/kfd
+        - name: dev-dri
+          mountPath: /dev/dri
+        securityContext:  # Container level
+          capabilities:
+            add:
+            - SYS_PTRACE
+          seccompProfile:
+            type: Unconfined
+      
+      securityContext:
+        supplementalGroups:  # Pod level
+        - 44
+      
+      volumes:
+      - name: temp-hf-cache
+        hostPath:
+          path: /root/.cache/huggingface
+          type: DirectoryOrCreate
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 128Gi
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri

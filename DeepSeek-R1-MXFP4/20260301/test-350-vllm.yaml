@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi350-vllm-numa0
+  namespace: default
+spec:
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mi350-vllm
+  template:
+    metadata:
+      labels:
+        app: mi350-vllm
+    spec:
+      hostIPC: true
+
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi350x
+
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      
+      containers:
+      - name: vllm-inference-container 
+        image: docker.io/rocm/vllm-dev:dsfp4_1120
+        imagePullPolicy: Always
+        command: ["sh", "-c", "sleep infinity"] # Test only
+ 
+        resources:
+          limits:
+            amd.com/gpu: 8
+        volumeMounts:
+        - name: temp-hf-cache
+          mountPath: /root/.cache/huggingface
+        - name: shm
+          mountPath: /dev/shm
+        - name: dev-kfd
+          mountPath: /dev/kfd
+        - name: dev-dri
+          mountPath: /dev/dri
+        securityContext:  # Container level
+          capabilities:
+            add:
+            - SYS_PTRACE
+          seccompProfile:
+            type: Unconfined
+      
+      securityContext:
+        supplementalGroups:  # Pod level
+        - 44
+      
+      volumes:
+      - name: temp-hf-cache
+        hostPath:
+          path: /root/.cache/huggingface
+          type: DirectoryOrCreate
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 128Gi
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri

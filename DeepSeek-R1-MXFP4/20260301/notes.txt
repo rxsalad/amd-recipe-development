@@ -1,0 +1,59 @@
+curl http://134.199.194.159:30080/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "amd/DeepSeek-R1-MXFP4",
+	"messages": [{"role": "user", "content": "who are you?"}]
+  }'
+
+
+curl http://134.199.194.159:30080/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+	"model": "amd/DeepSeek-R1-MXFP4",
+	"messages": [{"role": "user", "content": "how to learn AI/ML?"}]
+  }'
+
+
+#################### 2 NUMA Nodes
+
+root@mi350-vllm-5dc5bf776d-ffgml:/app# lscpu | grep -i numa
+NUMA node(s):                            2
+NUMA node0 CPU(s):                       0-95
+NUMA node1 CPU(s):                       96-191
+
+
+#################### Version
+
+root@mi350-vllm-5dc5bf776d-ffgml:/app# amd-smi version
+AMDSMI Tool: 26.2.1+fc0010cf6a | AMDSMI Library version: 26.2.1 | ROCm version: 7.2.0 | amdgpu version: 6.14.14 | hsmp version: N/A
+
+
+root@mi350-vllm-5dc5bf776d-ffgml:/app# cat versions.txt 
+BASE_IMAGE: rocm/dev-ubuntu-22.04:7.2-complete
+TRITON_BRANCH: 57c693b6
+TRITON_REPO: https://github.com/ROCm/triton.git
+PYTORCH_BRANCH: 89075173
+PYTORCH_VISION_BRANCH: v0.24.1
+PYTORCH_REPO: https://github.com/ROCm/pytorch.git
+PYTORCH_VISION_REPO: https://github.com/pytorch/vision.git
+PYTORCH_AUDIO_BRANCH: v2.9.0
+PYTORCH_AUDIO_REPO: https://github.com/pytorch/audio.git
+FA_BRANCH: 0e60e394
+FA_REPO: https://github.com/Dao-AILab/flash-attention.git
+AITER_BRANCH: v0.1.10.post2
+AITER_REPO: https://github.com/ROCm/aiter.git
+MORI_BRANCH: 2d02c6a9
+MORI_REPO: https://github.com/ROCm/mori.git
+VLLM_BASE_IMAGE=rocm/vllm-dev:base_custom_releases_rocm_v0.16.0_20260211
+
+
+#################### VS Code Server
+
+# Install VS Code Server
+
+curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' -o vscode_cli.tar.gz && \
+    tar -xf vscode_cli.tar.gz && \
+    mv code /usr/local/bin/code && \
+    rm vscode_cli.tar.gz
+
+# To connect using VS Code:
+# Log in the instance using the terminal, and then run the following commands:
+
+code tunnel user login --provider github
+nohup code tunnel --accept-server-license-terms --name 001 &> output.log &
