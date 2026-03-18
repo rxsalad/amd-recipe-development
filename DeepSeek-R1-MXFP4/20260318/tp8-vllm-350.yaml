@@ -1,0 +1,111 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tp8-vllm-mi350
+  namespace: default
+spec:
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tp8-vllm-mi350
+  template:
+    metadata:
+      labels:
+        app: tp8-vllm-mi350
+    spec:
+      hostIPC: true
+
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi350x
+
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      
+      containers:
+      - name: inference-container 
+        image: docker.io/vllm/vllm-openai-rocm:v0.17.1
+        # https://hub.docker.com/r/vllm/vllm-openai-rocm/tags
+        imagePullPolicy: Always
+        command: 
+        - bash
+        - -c
+        - |
+          set -ex  
+
+          export VLLM_DISABLE_COMPILE_CACHE=1
+          export AMDGCN_USE_BUFFER_OPS=1
+          export VLLM_ROCM_USE_AITER=1
+          export VLLM_ROCM_USE_AITER_MHA=1
+          export VLLM_ROCM_USE_AITER_MLA=0
+
+          export VLLM_TORCH_PROFILER_WITH_STACK=1
+          export VLLM_TORCH_PROFILER_RECORD_SHAPES=1
+          export VLLM_CUSTOM_SCOPES_FOR_PROFILING=1
+
+          export VLLM_ROCM_USE_AITER_FUSION_SHARED_EXPERTS=1
+
+          export VLLM_TORCH_PROFILER_DIR=.
+
+          python -m vllm.entrypoints.openai.api_server \
+              --host 0.0.0.0 \
+              --port 8000 \
+              --model amd/DeepSeek-R1-MXFP4 \
+              --swap-space 16 \
+              --trust-remote-code \
+              --no-enable-prefix-caching \
+              --dtype auto \
+              --tensor-parallel-size 8 \
+              --distributed-executor-backend mp \
+              --max-num-batched-tokens 163840 \
+              --max-num-seqs 64  \
+              --gpu-memory-utilization 0.95 \
+              --max-model-len 70000 \
+              --async-scheduling \
+              --kv-cache-dtype fp8 \
+              --block-size 1 \
+              --compilation-config '{"pass_config":{"fuse_attn_quant":true,"eliminate_noops":true,"fuse_norm_quant":true},"cudagraph_mode": "FULL_AND_PIECEWISE","custom_ops":["+rms_norm","+silu_and_mul","+quant_fp8"]}' --profiler-config '{"profiler": "torch", "torch_profiler_dir": "./vllm_profile", "torch_profiler_with_stack":true}'
+
+        resources:
+          limits:
+            amd.com/gpu: 8
+        volumeMounts:
+        - name: temp-hf-cache
+          mountPath: /root/.cache/huggingface
+        - name: shm
+          mountPath: /dev/shm
+        - name: dev-kfd
+          mountPath: /dev/kfd
+        - name: dev-dri
+          mountPath: /dev/dri
+        securityContext:  # Container level
+          capabilities:
+            add:
+            - SYS_PTRACE
+          seccompProfile:
+            type: Unconfined
+      
+      securityContext:
+        supplementalGroups:  # Pod level
+        - 44
+      
+      volumes:
+      - name: temp-hf-cache
+        hostPath:
+          path: /root/.cache/huggingface
+          type: DirectoryOrCreate
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 128Gi
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri

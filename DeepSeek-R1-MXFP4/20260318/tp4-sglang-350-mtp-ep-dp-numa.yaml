@@ -1,0 +1,128 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tp4-sglang-mi350
+  namespace: default
+spec:
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tp4-sglang-mi350
+  template:
+    metadata:
+      labels:
+        app: tp4-sglang-mi350
+    spec:
+      hostIPC: true
+
+      nodeSelector:
+        doks.digitalocean.com/gpu-model: mi350x
+
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      
+      containers:
+      - name: inference-container 
+        image: rocm/sgl-dev:v0.5.9-rocm700-mi35x-20260311
+        #image: rocm/sgl-dev:v0.5.9-rocm720-mi35x-20260315 # NOK
+        #image: rocm/sgl-dev:v0.5.9-rocm700-mi35x-20260315 # NOK
+        #https://hub.docker.com/r/rocm/sgl-dev/tags
+
+        imagePullPolicy: Always
+        #command: ["sh", "-c", "sleep infinity"] # Test only
+        command: 
+        - bash
+        - -c
+        - |
+          set -ex  
+
+          # sleep infinity
+ 
+          cd /sgl-workspace/sglang
+
+          apt-get update && apt-get install -y numactl && rm -rf /var/lib/apt/lists/*
+
+          git clone https://github.com/EmbeddedLLM/fastsafetensors-rocm.git &&
+          cd fastsafetensors-rocm &&
+          python3 setup.py develop &&
+
+          # NUMA node 0 → GPUs 0-3
+          numactl --cpunodebind=0 --membind=0 \
+          bash -c '
+          export HIP_VISIBLE_DEVICES=0,1,2,3
+          SGLANG_USE_AITER=1 \
+          SGLANG_DISABLE_TP_MEMORY_INBALANCE_CHECK=1 \
+          SGLANG_INT4_WEIGHT=0 \
+          SGLANG_MOE_PADDING=1 \
+          SGLANG_SET_CPU_AFFINITY=1 \
+          SGLANG_ROCM_FUSED_DECODE_MLA=1 \
+          SGLANG_USE_ROCM700A=1 \
+          python3 -m sglang.launch_server \
+            --host 0.0.0.0 \
+            --port 8000 \
+            --model-path amd/DeepSeek-R1-MXFP4 \
+            --tp-size 4 \
+            --dp-size 4 \
+            --enable-dp-attention \
+            --enable-dp-lm-head \
+            --ep-size 4 \
+            --speculative-algorithm EAGLE \
+            --speculative-num-steps 3 \
+            --speculative-eagle-topk 1 \
+            --speculative-num-draft-tokens 4 \
+            --speculative-attention-mode decode \
+            --speculative-draft-model-path lmsys/DeepSeek-R1-NextN \
+            --trust-remote-code \
+            --mem-fraction-static 0.95 \
+            --attention-backend aiter \
+            --chunked-prefill-size 131072 \
+            --disable-radix-cache \
+            --kv-cache-dtype fp8_e4m3 \
+            --max-running-requests 64 \
+            --load-format fastsafetensors 
+          ' 
+
+        resources:
+          limits:
+            amd.com/gpu: 8
+        volumeMounts:
+        - name: temp-hf-cache
+          mountPath: /root/.cache/huggingface
+        - name: shm
+          mountPath: /dev/shm
+        - name: dev-kfd
+          mountPath: /dev/kfd
+        - name: dev-dri
+          mountPath: /dev/dri
+        securityContext:  # Container level
+          capabilities:
+            add:
+            - SYS_PTRACE
+          seccompProfile:
+            type: Unconfined
+      
+      securityContext:
+        supplementalGroups:  # Pod level
+        - 44
+      
+      volumes:
+      - name: temp-hf-cache
+        hostPath:
+          path: /root/.cache/huggingface
+          type: DirectoryOrCreate
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 192Gi
+      - name: dev-kfd
+        hostPath:
+          path: /dev/kfd
+      - name: dev-dri
+        hostPath:
+          path: /dev/dri

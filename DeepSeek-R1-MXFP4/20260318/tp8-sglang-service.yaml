@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tp8-sglang-mi350
+  namespace: default
+spec:
+  selector:
+    app: tp8-sglang-mi350
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      nodePort: 30081
+      protocol: TCP
