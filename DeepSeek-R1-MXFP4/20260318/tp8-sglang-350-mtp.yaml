@@ -63,13 +63,14 @@ spec:
               --mem-fraction-static 0.95 \
               --chunked-prefill-size 131072 \
               --attention-backend aiter \
-              --max-running-requests 128 \
+              --max-running-requests 64 \
               --kv-cache-dtype fp8_e4m3 \
               --speculative-algorithm EAGLE \
               --speculative-num-steps 3 \
               --speculative-eagle-topk 1 \
               --speculative-num-draft-tokens 4 \
               --speculative-draft-model-path lmsys/DeepSeek-R1-NextN 
+              --max-queued-requests 32
 
           #   --log-requests 
           #   --max-queued-requests 64

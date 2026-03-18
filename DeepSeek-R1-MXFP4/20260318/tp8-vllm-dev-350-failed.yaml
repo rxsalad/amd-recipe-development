@@ -29,7 +29,7 @@ spec:
       
       containers:
       - name: inference-container 
-        image: docker.io/vllm/vllm-openai-rocm:v0.16.0
+        image: docker.io/rocm/vllm-dev:dsfp4_0215
         # https://hub.docker.com/r/vllm/vllm-openai-rocm/tags
         imagePullPolicy: Always
         command: 
