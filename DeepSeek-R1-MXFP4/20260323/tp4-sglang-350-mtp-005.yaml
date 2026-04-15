@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tp4-sglang-mi350-mtp-003
+  name: tp4-sglang-mi350-mtp-005
   namespace: default
 spec:
 
@@ -30,7 +30,9 @@ spec:
       containers:
       - name: vllm-inference-container 
         #image: rocm/sgl-dev:v0.5.9-rocm720-mi35x-20260320 - NOK
-        image: rocm/sgl-dev:v0.5.9-rocm700-mi35x-20260319 
+        #image: rocm/sgl-dev:v0.5.9-rocm700-mi35x-20260319 
+        image:  rocm/sgl-dev:v0.5.10rc0-rocm700-mi35x-20260414
+
         #image: rocm/sgl-dev:v0.5.9-rocm720-mi35x-20260315 - NOK
         #image: rocm/sgl-dev:v0.5.9-rocm700-mi35x-20260315
         #https://hub.docker.com/r/rocm/sgl-dev/tags
@@ -76,8 +78,8 @@ spec:
               --speculative-eagle-topk 1 \
               --speculative-num-draft-tokens 4 \
               --speculative-draft-model-path lmsys/DeepSeek-R1-NextN \
-              --max-queued-requests 64 
-   
+              --max-queued-requests 64 \
+              --weight-loader-disable-mmap
 
 
           #   --log-requests 

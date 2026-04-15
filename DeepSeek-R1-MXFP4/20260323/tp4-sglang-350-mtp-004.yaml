@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tp4-sglang-mi350-mtp-003
+  name: tp4-sglang-mi350-mtp-004
   namespace: default
 spec:
 
@@ -76,8 +76,8 @@ spec:
               --speculative-eagle-topk 1 \
               --speculative-num-draft-tokens 4 \
               --speculative-draft-model-path lmsys/DeepSeek-R1-NextN \
-              --max-queued-requests 64 
-   
+              --max-queued-requests 64 \
+              --weight-loader-disable-mmap
 
 
           #   --log-requests 

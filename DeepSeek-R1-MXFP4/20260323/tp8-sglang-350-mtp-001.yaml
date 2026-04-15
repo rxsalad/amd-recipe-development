@@ -69,7 +69,7 @@ spec:
               --speculative-num-steps 3 \
               --speculative-eagle-topk 1 \
               --speculative-num-draft-tokens 4 \
-              --speculative-draft-model-path lmsys/DeepSeek-R1-NextN 
+              --speculative-draft-model-path lmsys/DeepSeek-R1-NextN \
               --max-queued-requests 128
 
           #   --log-requests 
